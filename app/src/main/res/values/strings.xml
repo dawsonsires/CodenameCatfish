@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">CodenameCatfish</string>
+    <string name="app_name">Codename: Catfish</string>
+    <string name="stats">Stats</string>
+    <string name="play">PLAY!</string>
+    <string name="rules">Rules</string>
+    <string name="about">About</string>
 </resources>
