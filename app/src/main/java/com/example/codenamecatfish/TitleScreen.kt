@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.findNavController
 import com.example.codenamecatfish.databinding.FragmentTitleScreenBinding
 
 class TitleScreen : Fragment() {
@@ -16,6 +17,9 @@ class TitleScreen : Fragment() {
 //        binding.playButton.setOnClickListener { view: View ->
 //            view.findNavController().navigate(R.id.where.ever.this.is.going)
 //        }
+        binding.rulesButton.setOnClickListener {view: View ->
+            view.findNavController().navigate(R.id.action_titleScreen_to_rulesScreen)
+        }
         return binding.root
     }
 

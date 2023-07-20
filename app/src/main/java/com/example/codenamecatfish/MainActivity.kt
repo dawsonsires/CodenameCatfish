@@ -33,12 +33,11 @@ class MainActivity : AppCompatActivity() {
 //                    Greeting("Android")
 //                }
 //            }
-//        }
+////        }
         val binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
-        val navController = this.findNavController(R.id.navHost)
-        drawerLayout = binding.drawer
-        NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout)
-        NavigationUI.setupWithNavController(binding.navView, navController)
+//        val navController = this.findNavController(R.id.navHost)
+//        NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout)
+//        NavigationUI.setupWithNavController(binding.navView, navController)
     }
 }
 //

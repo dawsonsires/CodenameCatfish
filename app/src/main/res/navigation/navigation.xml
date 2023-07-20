@@ -9,5 +9,14 @@
         android:id="@+id/titleScreen"
         android:name="com.example.codenamecatfish.TitleScreen"
         android:label="fragment_title_screen"
-        tools:layout="@layout/fragment_title_screen" />
+        tools:layout="@layout/fragment_title_screen" >
+        <action
+            android:id="@+id/action_titleScreen_to_rulesScreen"
+            app:destination="@id/rulesScreen" />
+    </fragment>
+    <fragment
+        android:id="@+id/rulesScreen"
+        android:name="com.example.codenamecatfish.RulesScreen"
+        android:label="fragment_rules_screen"
+        tools:layout="@layout/fragment_rules_screen" />
 </navigation>
