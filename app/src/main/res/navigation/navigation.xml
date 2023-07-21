@@ -13,10 +13,26 @@
         <action
             android:id="@+id/action_titleScreen_to_rulesScreen"
             app:destination="@id/rulesScreen" />
+        <action
+            android:id="@+id/action_titleScreen_to_unlockablesScreen"
+            app:destination="@id/unlockablesScreen" />
+        <action
+            android:id="@+id/action_titleScreen_to_statsScreen"
+            app:destination="@id/statsScreen" />
     </fragment>
     <fragment
         android:id="@+id/rulesScreen"
         android:name="com.example.codenamecatfish.RulesScreen"
         android:label="fragment_rules_screen"
         tools:layout="@layout/fragment_rules_screen" />
+    <fragment
+        android:id="@+id/unlockablesScreen"
+        android:name="com.example.codenamecatfish.UnlockablesScreen"
+        android:label="fragment_unlockables_screen"
+        tools:layout="@layout/fragment_unlockables_screen" />
+    <fragment
+        android:id="@+id/statsScreen"
+        android:name="com.example.codenamecatfish.StatsScreen"
+        android:label="fragment_stats_screen"
+        tools:layout="@layout/fragment_stats_screen" />
 </navigation>

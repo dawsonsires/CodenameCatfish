@@ -4,9 +4,8 @@
     <string name="play">Play!</string>
     <string name="rules">How to play?</string>
     <string name="about">About</string>
-    <string name="unlocked_sounds">Unlocked sounds</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="unlocked_sounds">Unlocked Sounds</string>
+    <string name="statistics">Statistics</string>
     <string name="bonzi">"
                                       /##/*
                                   ##(########%.
