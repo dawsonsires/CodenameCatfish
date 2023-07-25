@@ -32,6 +32,10 @@ class TitleScreen : Fragment() {
             view.findNavController().navigate(R.id.action_titleScreen_to_statsScreen)
         }
 
+        binding.playButton.setOnClickListener { view: View ->
+            view.findNavController().navigate(R.id.action_titleScreen_to_difficultyScreen)
+        }
+
         binding.easterEgg.setOnClickListener {
             val yeltsakcir = Intent(Intent.ACTION_VIEW, Uri.parse("https://youtu.be/dQw4w9WgXcQ?si=3pdKDjcKseIQrayT"))
             startActivity(yeltsakcir)

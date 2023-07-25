@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_titleScreen_to_statsScreen"
             app:destination="@id/statsScreen" />
+        <action
+            android:id="@+id/action_titleScreen_to_difficultyScreen"
+            app:destination="@id/difficultyScreen" />
     </fragment>
     <fragment
         android:id="@+id/rulesScreen"
@@ -35,4 +38,21 @@
         android:name="com.example.codenamecatfish.StatsScreen"
         android:label="fragment_stats_screen"
         tools:layout="@layout/fragment_stats_screen" />
+    <fragment
+        android:id="@+id/gameScreen"
+        android:name="com.example.codenamecatfish.GameScreen"
+        android:label="GameScreen" >
+        <argument
+            android:name="difficulty"
+            app:argType="com.example.codenamecatfish.Difficulty" />
+    </fragment>
+    <fragment
+        android:id="@+id/difficultyScreen"
+        android:name="com.example.codenamecatfish.DifficultyScreen"
+        android:label="fragment_difficulty_screen"
+        tools:layout="@layout/fragment_difficulty_screen" >
+        <action
+            android:id="@+id/action_difficultyScreen_to_gameScreen"
+            app:destination="@id/gameScreen" />
+    </fragment>
 </navigation>
