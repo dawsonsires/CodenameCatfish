@@ -13,6 +13,7 @@
             android:layout_height="wrap_content"
             android:text="@string/select_difficulty"
             android:textSize="48sp"
+            android:gravity="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.493"

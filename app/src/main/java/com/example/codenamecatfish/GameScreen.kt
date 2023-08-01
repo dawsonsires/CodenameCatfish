@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.example.codenamecatfish.databinding.FragmentGameScreenBinding
@@ -23,6 +24,7 @@ class GameScreen: Fragment() {
         //INFLATE that pup
         val binding: FragmentGameScreenBinding = DataBindingUtil.inflate<FragmentGameScreenBinding>(inflater,
             R.layout.fragment_game_screen, container, false)
+
         val sequence = generateGameSequence(GameScreenArgs.fromBundle(requireArguments()).difficulty)
         showSequenceAnimation(sequence.subList(0, collinSequenceIndex++), binding)
 
@@ -79,6 +81,4 @@ class GameScreen: Fragment() {
             }
         }
     }
-
-
 }
