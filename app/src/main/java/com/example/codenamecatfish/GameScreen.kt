@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -30,29 +31,40 @@ class GameScreen : Fragment() {
             R.layout.fragment_game_screen, container, false
         )
         var repeatsLeft = 3
-        var gameStarting = false
         val sequence =
             generateGameSequence(GameScreenArgs.fromBundle(requireArguments()).difficulty)
         val enteredSequencePoints = mutableListOf<SequencePoint>()
         binding.btnRed.setOnClickListener { view: View ->
-            enteredSequencePoints.add(SequencePoint.RED)
-            checkGameState(sequence, enteredSequencePoints, view, binding)
+            animate(binding.btnRed, 0xFF6C0000.toInt(), 0xFFFF0000.toInt()).start()
+            if(gameStarted) {
+                enteredSequencePoints.add(SequencePoint.RED)
+                checkGameState(sequence, enteredSequencePoints, view, binding)
+            }
         }
         binding.btnYellow.setOnClickListener { view: View ->
-            enteredSequencePoints.add(SequencePoint.YELLOW)
-            checkGameState(sequence, enteredSequencePoints, view, binding)
+            animate(binding.btnYellow, 0xFF918200.toInt(), 0xFFFFE500.toInt()).start()
+            if(gameStarted) {
+                enteredSequencePoints.add(SequencePoint.YELLOW)
+                checkGameState(sequence, enteredSequencePoints, view, binding)
+            }
         }
         binding.btnBlue.setOnClickListener { view: View ->
-            enteredSequencePoints.add(SequencePoint.BLUE)
-            checkGameState(sequence, enteredSequencePoints, view, binding)
+            animate(binding.btnBlue, 0xFF014881.toInt(), 0xFF008EFF.toInt()).start()
+            if(gameStarted) {
+                enteredSequencePoints.add(SequencePoint.BLUE)
+                checkGameState(sequence, enteredSequencePoints, view, binding)
+            }
         }
         binding.btnGreen.setOnClickListener { view: View ->
-            enteredSequencePoints.add(SequencePoint.GREEN)
-            checkGameState(sequence, enteredSequencePoints, view, binding)
+            animate(binding.btnGreen, 0xFF005100.toInt(), 0xFF00FF00.toInt()).start()
+            if(gameStarted) {
+                enteredSequencePoints.add(SequencePoint.GREEN)
+                checkGameState(sequence, enteredSequencePoints, view, binding)
+            }
         }
         binding.btnRepeat.setOnClickListener {
-            if (!gameStarting) {
-                gameStarting = !gameStarting
+            if (!gameStarted) {
+                gameStarted = true
                 binding.btnRepeat.text = getString(R.string.repeat_sequence_3_left)
                 showBlinkingAnimation(sequence.subList(0, 1), binding)
                 currentIndexInSequence++
@@ -117,54 +129,33 @@ class GameScreen : Fragment() {
             .navigate(GameScreenDirections.actionGameScreenToTitleScreen())
     }
 
+    fun animate(button: Button, color1: Int, color2: Int): ObjectAnimator{
+      val animator = ObjectAnimator.ofArgb(
+            button,
+            "backgroundColor",
+            color1,
+            color2
+        )
+        animator.duration = 250
+        animator.repeatCount = 1
+        animator.repeatMode = ObjectAnimator.REVERSE
+        return animator
+    }
     private fun showBlinkingAnimation(points: List<SequencePoint>, binding: FragmentGameScreenBinding) {
-        var animator: ObjectAnimator
         val littleAni = mutableListOf<Animator>()
         for (p in points) {
-                when (p) {
-                    SequencePoint.RED -> {
-                        animator = ObjectAnimator.ofArgb(
-                            binding.btnRed,
-                            "backgroundColor",
-                            0xFF424242.toInt(),
-                            0xFFFF0000.toInt()
-                        )
-                    }
+            littleAni.add(when (p) {
+                SequencePoint.RED -> animate(binding.btnRed, 0xFF6C0000.toInt(), 0xFFFF0000.toInt())
 
-                    SequencePoint.YELLOW -> {
-                        animator = ObjectAnimator.ofArgb(
-                            binding.btnYellow,
-                            "backgroundColor",
-                            0xFF424242.toInt(),
-                            0xFFFFE500.toInt()
-                        )
-                    }
+                SequencePoint.YELLOW -> animate(binding.btnYellow, 0xFF918200.toInt(), 0xFFFFE500.toInt())
 
-                    SequencePoint.BLUE -> {
-                        animator = ObjectAnimator.ofArgb(
-                            binding.btnBlue,
-                            "backgroundColor",
-                            0xFF424242.toInt(),
-                            0xFF008EFF.toInt()
-                        )
-                    }
+                SequencePoint.BLUE -> animate(binding.btnBlue, 0xFF014881.toInt(), 0xFF008EFF.toInt())
 
-                    else -> {
-                        animator = ObjectAnimator.ofArgb(
-                            binding.btnGreen,
-                            "backgroundColor",
-                            0xFF424242.toInt(),
-                            0xFF00FF00.toInt()
-                        )
-                    }
-                }
-                animator.duration = 250
-                animator.repeatCount = 1
-                animator.repeatMode = ObjectAnimator.REVERSE
-//                animator.start()
-            littleAni.add(animator)
+                else -> animate(binding.btnGreen, 0xFF005100.toInt(), 0xFF00FF00.toInt())
+            })
             }
         val bigAni = AnimatorSet()
+        bigAni.startDelay = 1000
         bigAni.playSequentially(littleAni)
         bigAni.start()
 
