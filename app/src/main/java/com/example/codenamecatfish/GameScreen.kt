@@ -3,7 +3,6 @@ package com.example.codenamecatfish
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -129,7 +128,7 @@ class GameScreen : Fragment() {
             .navigate(GameScreenDirections.actionGameScreenToTitleScreen())
     }
 
-    fun animate(button: Button, color1: Int, color2: Int): ObjectAnimator{
+    private fun animate(button: Button, color1: Int, color2: Int): ObjectAnimator{
       val animator = ObjectAnimator.ofArgb(
             button,
             "backgroundColor",
