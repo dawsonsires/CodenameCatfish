@@ -1,5 +1,7 @@
 package com.example.codenamecatfish
 
+import android.animation.Animator
+import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -99,22 +101,25 @@ class GameScreen : Fragment() {
             }
 
             //if next guess is the last in master sequence - you win and get a prize :D
-            if (index == sequence.size - 1) winTheGame()
+            if (index >= sequence.size - 1) winTheGame(view)
             //otherwise, play animation for next section of master sequence
             else {
-                showBlinkingAnimation(sequence.subList(0, ++currentIndexInSequence), binding)
-                enteredSequencePoints.clear()
+                if(index == enteredSequencePoints.size-1) showBlinkingAnimation(sequence.subList(0, ++currentIndexInSequence), binding)
             }
         }
+        enteredSequencePoints.clear()
     }
 
-    private fun winTheGame() {
+    private fun winTheGame(view: View) {
 
         Toast.makeText(context, "WINNER!", Toast.LENGTH_LONG).show()
+        view.findNavController()
+            .navigate(GameScreenDirections.actionGameScreenToTitleScreen())
     }
 
     private fun showBlinkingAnimation(points: List<SequencePoint>, binding: FragmentGameScreenBinding) {
         var animator: ObjectAnimator
+        val littleAni = mutableListOf<Animator>()
         for (p in points) {
                 when (p) {
                     SequencePoint.RED -> {
@@ -156,8 +161,13 @@ class GameScreen : Fragment() {
                 animator.duration = 250
                 animator.repeatCount = 1
                 animator.repeatMode = ObjectAnimator.REVERSE
-                animator.start()
+//                animator.start()
+            littleAni.add(animator)
             }
+        val bigAni = AnimatorSet()
+        bigAni.playSequentially(littleAni)
+        bigAni.start()
+
     }
 
     private fun generateGameSequence(difficulty: Difficulty): List<SequencePoint> {

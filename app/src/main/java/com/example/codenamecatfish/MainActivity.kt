@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
          val binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
 //        DataBindingUtil.setContentView<FragmentGameScreenBinding>(this, R.layout.fragment_game_screen)  // TODO: GAME TEST - REMOVE THIS!
         val navController = this.findNavController(R.id.navHost)
-        NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout)
+//        NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout)
         NavigationUI.setupWithNavController(binding.navView, navController)
     }
 
