@@ -18,16 +18,21 @@ class DifficultyScreen : Fragment() {
 
         val binding = DataBindingUtil.inflate<FragmentDifficultyScreenBinding>(inflater, R.layout.fragment_difficulty_screen, container, false)
 
+        val bundle = Bundle()
+
         binding.btnEasy.setOnClickListener{ view: View ->
-            view.findNavController().navigate(R.id.action_difficultyScreen_to_gameScreen)
+            bundle.putSerializable("difficulty", Difficulty.EASY)
+            view.findNavController().navigate(R.id.action_difficultyScreen_to_gameScreen, bundle)
         }
 
         binding.btnNormal.setOnClickListener{ view: View ->
-            view.findNavController().navigate(R.id.action_difficultyScreen_to_gameScreen)
+            bundle.putSerializable("difficulty", Difficulty.NORMAL)
+            view.findNavController().navigate(R.id.action_difficultyScreen_to_gameScreen, bundle)
         }
 
         binding.btnHard.setOnClickListener{ view: View ->
-            view.findNavController().navigate(R.id.action_difficultyScreen_to_gameScreen)
+            bundle.putSerializable("difficulty", Difficulty.HARD)
+            view.findNavController().navigate(R.id.action_difficultyScreen_to_gameScreen, bundle)
         }
 
         // Inflate the layout for this fragment

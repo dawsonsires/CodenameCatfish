@@ -45,6 +45,9 @@
         <argument
             android:name="difficulty"
             app:argType="com.example.codenamecatfish.Difficulty" />
+        <action
+            android:id="@+id/action_gameScreen_to_titleScreen"
+            app:destination="@id/titleScreen" />
     </fragment>
     <fragment
         android:id="@+id/difficultyScreen"

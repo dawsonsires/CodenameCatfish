@@ -31,13 +31,17 @@
                              /##(((#((##   ##(((((###*
                           ((#(##(#/  *      */ ,(#(#((((
     "</string>
-    <string name="repeat_sequence_3_left">Repeat sequence (3 left)</string>
     <string name="collin_d">Collin :D</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="select_difficulty">Select com.example.codenamecatfish.Difficulty</string>
+    <string name="select_difficulty">Select difficulty</string>
     <string name="easy_sequence_of_5_normal_10_hard_15">Easy = Sequence of 5, Normal = 10, Hard = 15</string>
     <string name="easy">Easy</string>
     <string name="normal">Normal</string>
     <string name="hard">Hard</string>
+    <string name="two_repeats_left">Repeat Sequence (2 left)</string>
+    <string name="one_repeats_left">Repeat Sequence (1 left)</string>
+    <string name="zero_repeats_left">Repeat Sequence (0 left)</string>
+    <string name="repeat_sequence_3_left">Repeat Sequence (3 left)</string>
+    <string name="no_repeats_left">Out of repeats!</string>
 </resources>
