@@ -20,9 +20,16 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.example.codenamecatfish.databinding.FragmentGameScreenBinding
+import kotlinx.coroutines.selects.select
 import java.io.BufferedReader
+import java.io.BufferedWriter
 import java.io.File
+import java.io.FileOutputStream
+import java.io.FileReader
+import java.io.FileWriter
+import java.io.InputStream
 import java.io.InputStreamReader
+import java.io.OutputStream
 import kotlin.random.Random
 
 class GameScreen : Fragment() {
@@ -31,7 +38,10 @@ class GameScreen : Fragment() {
     private lateinit var data: SharedPreferences
     private lateinit var store: SharedPreferences.Editor
     private lateinit var sounds: List<Triple<String, String, Boolean>>
-    private var usedSounds = ""
+    val redSound = R.raw.wat
+    val yellowSound =  R.raw.wat1
+    val blueSound = R.raw.wat2
+    val greenSound = R.raw.wat3
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,11 +63,6 @@ class GameScreen : Fragment() {
         val enteredSequencePoints = mutableListOf<SequencePoint>()
 
         sounds = getSoundsArray()
-
-        val redSound = R.raw.beep1
-        val yellowSound =  R.raw.beep2
-        val blueSound = R.raw.beep3
-        val greenSound = R.raw.beep4
 
         binding.btnRed.setOnClickListener { view: View ->
             animate(binding.btnRed, 0xFF6C0000.toInt(), 0xFFFF0000.toInt(), redSound).start()
@@ -147,23 +152,45 @@ class GameScreen : Fragment() {
                 context?.assets?.open("sounds.csv")
             )
         )
-        val unlocked: String = InputStreamReader(context?.assets?.open("unlocked.txt")).readText()
+
+        val unlockedSounds = data.getStringSet("unlocked", mutableSetOf<String>())
+
         val sounds = mutableListOf<Triple<String, String, Boolean>>()
         reader.forEachLine {
             val (title, file) = it.split(',')
-            sounds.add(Triple(title.trim(), file.trim(), unlocked.contains(title.trim())))
+            sounds.add(Triple(title.trim(), file.trim(), unlockedSounds.toString().contains(title.trim())))
         }
         return sounds.toList()
     }
 
     private fun pickRandomSound(): String{
+        var usedSounds = mutableListOf<Int>()
         val filteredSounds = sounds.filter { it.third }
         var random: Int
         do {
             random = (filteredSounds.indices).random()
-        } while (usedSounds.contains(random.toString()))
-        usedSounds += random.toString()
+        } while (usedSounds.contains(random))
+        usedSounds.add(random)
         return filteredSounds[random].second
+    }
+
+    fun unlockSounds(n: Int){
+        val filteredSounds = sounds.filter { !it.third }
+        val num = n.coerceAtMost(filteredSounds.size)
+        var chosen = mutableListOf<Int>()
+        var unlockedSounds = data.getStringSet("unlocked", mutableSetOf<String>())
+
+        var i = 0
+        while(i < num){
+            val selected = (0..filteredSounds.size).random()
+            if(chosen.contains(selected))
+                continue
+            i++
+            chosen.add(selected)
+            unlockedSounds?.add(filteredSounds[selected].first)
+            Toast.makeText(context, "Unlocked sound: ${filteredSounds[selected].first}", Toast.LENGTH_SHORT).show()
+        }
+        store.putStringSet("unlocked", unlockedSounds)
     }
 
     private fun winTheGame(view: View) {
@@ -171,6 +198,7 @@ class GameScreen : Fragment() {
         Toast.makeText(context, "WINNER!", Toast.LENGTH_LONG).show()
         view.findNavController()
             .navigate(GameScreenDirections.actionGameScreenToTitleScreen())
+            unlockSounds(currentIndexInSequence/5)
         if(data.getInt("highScore", 0) < currentIndexInSequence) {
             store.putInt("highScore", currentIndexInSequence)
             store.commit()
@@ -194,10 +222,6 @@ class GameScreen : Fragment() {
     }
     private fun showBlinkingAnimation(points: List<SequencePoint>, binding: FragmentGameScreenBinding) {
         val littleAni = mutableListOf<Animator>()
-        val redSound = R.raw.beep1
-        val yellowSound = R.raw.beep2
-        val blueSound = R.raw.beep3
-        val greenSound = R.raw.beep4
         for (p in points) {
             littleAni.add(when (p) {
                 SequencePoint.RED -> animate(binding.btnRed, 0xFF6C0000.toInt(), 0xFFFF0000.toInt(), redSound)

@@ -39,5 +39,6 @@ class StatsScreen : Fragment() {
     fun loadData(){
         binding.playCount.text = data.getInt("timesPlayed", 0).toString()
         binding.highScore.text = data.getInt("highScore", 0).toString()
+        binding.soundsUnlocked.text = data.getStringSet("unlocked", setOf<String>())?.size.toString()
     }
 }
