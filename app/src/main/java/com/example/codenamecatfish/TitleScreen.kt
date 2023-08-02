@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
 import com.example.codenamecatfish.databinding.FragmentTitleScreenBinding
@@ -36,11 +37,13 @@ class TitleScreen : Fragment() {
         }
 
         binding.easterEgg.setOnClickListener {
-            try {
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:///dQw4w9WgXcQ?si=3pdKDjcKseIQrayT")))
-            } catch (e: Error){
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://youtu.be/dQw4w9WgXcQ?si=3pdKDjcKseIQrayT")))   // if YouTube is not installed
-            }
+
+            Toast.makeText(context, "Hi", Toast.LENGTH_SHORT)
+//            try {
+//                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:///dQw4w9WgXcQ?si=3pdKDjcKseIQrayT")))
+//            } catch (e: Error){
+//                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://youtu.be/dQw4w9WgXcQ?si=3pdKDjcKseIQrayT")))   // if YouTube is not installed
+//            }
         }
 
         val growShrinkAnimation = AnimationUtils.loadAnimation(context, R.anim.grow_shrink )

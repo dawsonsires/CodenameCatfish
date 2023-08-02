@@ -3,26 +3,36 @@ package com.example.codenamecatfish
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
+import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
+import androidx.core.animation.doOnEnd
+import androidx.core.animation.doOnStart
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.example.codenamecatfish.databinding.FragmentGameScreenBinding
+import java.io.BufferedReader
+import java.io.File
+import java.io.InputStreamReader
 import kotlin.random.Random
 
 class GameScreen : Fragment() {
-    private var repeatSequenceChances = 3
     private var gameStarted = false
     private var currentIndexInSequence = 0
     private lateinit var data: SharedPreferences
     private lateinit var store: SharedPreferences.Editor
+    private lateinit var sounds: List<Triple<String, String, Boolean>>
+    private var usedSounds = ""
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -41,29 +51,37 @@ class GameScreen : Fragment() {
         val sequence =
             generateGameSequence(GameScreenArgs.fromBundle(requireArguments()).difficulty)
         val enteredSequencePoints = mutableListOf<SequencePoint>()
+
+        sounds = getSoundsArray()
+
+        val redSound = R.raw.beep1
+        val yellowSound =  R.raw.beep2
+        val blueSound = R.raw.beep3
+        val greenSound = R.raw.beep4
+
         binding.btnRed.setOnClickListener { view: View ->
-            animate(binding.btnRed, 0xFF6C0000.toInt(), 0xFFFF0000.toInt()).start()
+            animate(binding.btnRed, 0xFF6C0000.toInt(), 0xFFFF0000.toInt(), redSound).start()
             if(gameStarted) {
                 enteredSequencePoints.add(SequencePoint.RED)
                 checkGameState(sequence, enteredSequencePoints, view, binding)
             }
         }
         binding.btnYellow.setOnClickListener { view: View ->
-            animate(binding.btnYellow, 0xFF918200.toInt(), 0xFFFFE500.toInt()).start()
+            animate(binding.btnYellow, 0xFF918200.toInt(), 0xFFFFE500.toInt(), yellowSound).start()
             if(gameStarted) {
                 enteredSequencePoints.add(SequencePoint.YELLOW)
                 checkGameState(sequence, enteredSequencePoints, view, binding)
             }
         }
         binding.btnBlue.setOnClickListener { view: View ->
-            animate(binding.btnBlue, 0xFF014881.toInt(), 0xFF008EFF.toInt()).start()
+            animate(binding.btnBlue, 0xFF014881.toInt(), 0xFF008EFF.toInt(), blueSound).start()
             if(gameStarted) {
                 enteredSequencePoints.add(SequencePoint.BLUE)
                 checkGameState(sequence, enteredSequencePoints, view, binding)
             }
         }
         binding.btnGreen.setOnClickListener { view: View ->
-            animate(binding.btnGreen, 0xFF005100.toInt(), 0xFF00FF00.toInt()).start()
+            animate(binding.btnGreen, 0xFF005100.toInt(), 0xFF00FF00.toInt(), greenSound).start()
             if(gameStarted) {
                 enteredSequencePoints.add(SequencePoint.GREEN)
                 checkGameState(sequence, enteredSequencePoints, view, binding)
@@ -72,7 +90,7 @@ class GameScreen : Fragment() {
         binding.btnRepeat.setOnClickListener {
             if (!gameStarted) {
                 gameStarted = true
-                binding.btnRepeat.text = getString(R.string.repeat_sequence_3_left)
+                binding.btnRepeat.text = "Repeat Sequence ($repeatsLeft left)"
                 showBlinkingAnimation(sequence.subList(0, 1), binding)
                 currentIndexInSequence++
                 store.putInt("timesPlayed", data.getInt("timesPlayed", 0) + 1)
@@ -80,24 +98,11 @@ class GameScreen : Fragment() {
 
             } else {
                 repeatsLeft--
-                when (repeatsLeft) {
-                    2 -> {
-                        binding.btnRepeat.text = getString(R.string.two_repeats_left)
+                if (repeatsLeft >= 0) {
+                        binding.btnRepeat.text = "Repeat Sequence ($repeatsLeft left)"
                         showBlinkingAnimation(sequence.subList(0, currentIndexInSequence), binding)
-                    }
-
-                    1 -> {
-                        binding.btnRepeat.text = getString(R.string.one_repeats_left)
-                        showBlinkingAnimation(sequence.subList(0, currentIndexInSequence), binding)
-                    }
-
-                    0 -> {
-                        binding.btnRepeat.text = getString(R.string.zero_repeats_left)
-                        showBlinkingAnimation(sequence.subList(0, currentIndexInSequence), binding)
-                    }
-
-                    else -> Toast.makeText(context, getString(R.string.no_repeats_left), Toast.LENGTH_SHORT).show()
-                }
+                } else
+                    Toast.makeText(context, getString(R.string.no_repeats_left), Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -118,10 +123,10 @@ class GameScreen : Fragment() {
             if (value != sequence[index]) {
                 Toast.makeText(context, "Wrong color chosen - game over! :(", Toast.LENGTH_LONG)
                     .show()
-
-                Toast.makeText(context, currentIndexInSequence.toString(), Toast.LENGTH_LONG)
-                    .show()
-                store.commit()
+                if(data.getInt("highScore", 0) < currentIndexInSequence) {
+                    store.putInt("highScore", currentIndexInSequence)
+                    store.commit()
+                }
                 view.findNavController()
                     .navigate(GameScreenDirections.actionGameScreenToTitleScreen())
             }
@@ -136,39 +141,74 @@ class GameScreen : Fragment() {
         enteredSequencePoints.clear()
     }
 
+    private fun getSoundsArray(): List<Triple<String, String, Boolean>> {
+        val reader = BufferedReader(
+            InputStreamReader(
+                context?.assets?.open("sounds.csv")
+            )
+        )
+        val unlocked: String = InputStreamReader(context?.assets?.open("unlocked.txt")).readText()
+        val sounds = mutableListOf<Triple<String, String, Boolean>>()
+        reader.forEachLine {
+            val (title, file) = it.split(',')
+            sounds.add(Triple(title.trim(), file.trim(), unlocked.contains(title.trim())))
+        }
+        return sounds.toList()
+    }
+
+    private fun pickRandomSound(): String{
+        val filteredSounds = sounds.filter { it.third }
+        var random: Int
+        do {
+            random = (filteredSounds.indices).random()
+        } while (usedSounds.contains(random.toString()))
+        usedSounds += random.toString()
+        return filteredSounds[random].second
+    }
+
     private fun winTheGame(view: View) {
 
         Toast.makeText(context, "WINNER!", Toast.LENGTH_LONG).show()
         view.findNavController()
             .navigate(GameScreenDirections.actionGameScreenToTitleScreen())
-        store.putInt("highScore", currentIndexInSequence)
+        if(data.getInt("highScore", 0) < currentIndexInSequence) {
+            store.putInt("highScore", currentIndexInSequence)
+            store.commit()
+        }
     }
 
-    private fun animate(button: Button, color1: Int, color2: Int): ObjectAnimator{
+    private fun animate(button: Button, color1: Int, color2: Int, sound: Int): ObjectAnimator{
       val animator = ObjectAnimator.ofArgb(
             button,
             "backgroundColor",
             color1,
             color2
-        )
+      )
+        val mp = MediaPlayer.create(context, sound)
         animator.duration = 250
         animator.repeatCount = 1
         animator.repeatMode = ObjectAnimator.REVERSE
+        animator.doOnStart { mp.start() }
+        animator.doOnEnd { mp.release() }   // remove used player, otherwise it eventually stops working
         return animator
     }
     private fun showBlinkingAnimation(points: List<SequencePoint>, binding: FragmentGameScreenBinding) {
         val littleAni = mutableListOf<Animator>()
+        val redSound = R.raw.beep1
+        val yellowSound = R.raw.beep2
+        val blueSound = R.raw.beep3
+        val greenSound = R.raw.beep4
         for (p in points) {
             littleAni.add(when (p) {
-                SequencePoint.RED -> animate(binding.btnRed, 0xFF6C0000.toInt(), 0xFFFF0000.toInt())
+                SequencePoint.RED -> animate(binding.btnRed, 0xFF6C0000.toInt(), 0xFFFF0000.toInt(), redSound)
 
-                SequencePoint.YELLOW -> animate(binding.btnYellow, 0xFF918200.toInt(), 0xFFFFE500.toInt())
+                SequencePoint.YELLOW -> animate(binding.btnYellow, 0xFF918200.toInt(), 0xFFFFE500.toInt(), yellowSound)
 
-                SequencePoint.BLUE -> animate(binding.btnBlue, 0xFF014881.toInt(), 0xFF008EFF.toInt())
+                SequencePoint.BLUE -> animate(binding.btnBlue, 0xFF014881.toInt(), 0xFF008EFF.toInt(), blueSound)
 
-                else -> animate(binding.btnGreen, 0xFF005100.toInt(), 0xFF00FF00.toInt())
+                else -> animate(binding.btnGreen, 0xFF005100.toInt(), 0xFF00FF00.toInt(), greenSound)
             })
-            }
+        }
         val bigAni = AnimatorSet()
         bigAni.startDelay = 1000
         bigAni.playSequentially(littleAni)

@@ -63,8 +63,8 @@ tools:context=".StatsScreen">
                         android:id="@+id/playCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/times_played"
-                        android:layout_gravity="right"/>
+                        android:layout_gravity="right"
+                        android:text="@string/placeholder_num"/>
                     <TextView
                         android:id="@+id/highScoreLbl"
                         android:layout_width="wrap_content"
@@ -75,8 +75,8 @@ tools:context=".StatsScreen">
                         android:id="@+id/highScore"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/highest_score"
-                        android:layout_gravity="right"/>
+                        android:layout_gravity="right"
+                        android:text="@string/placeholder_num"/>
                     <TextView
                         android:id="@+id/soundsUnlockedLbl"
                         android:layout_width="wrap_content"
@@ -87,7 +87,7 @@ tools:context=".StatsScreen">
                         android:id="@+id/soundsUnlocked"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/sounds_unlocked"
+                        android:text="@string/placeholder_num"
                         android:layout_gravity="right"/>
                 </GridLayout>
 
