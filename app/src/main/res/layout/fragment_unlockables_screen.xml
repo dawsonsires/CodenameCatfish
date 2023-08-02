@@ -26,18 +26,15 @@
                 android:textSize="40sp"
                 android:layout_marginTop="60dp"/>
             <GridLayout
+                android:id="@+id/buttonPanel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/unlockedTitle"
                 android:layout_margin="40dp"
-                android:columnCount="4"
+                android:columnCount="3"
                 tools:ignore="UselessLeaf">
-
-
-
-
             </GridLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

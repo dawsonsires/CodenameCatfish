@@ -193,6 +193,7 @@ class GameScreen : Fragment() {
             Toast.makeText(context, "Unlocked sound: ${filteredSounds[selected].first}", Toast.LENGTH_SHORT).show()
         }
         store.putStringSet("unlocked", unlockedSounds)
+        store.commit()
     }
 
     private fun winTheGame(view: View) {
