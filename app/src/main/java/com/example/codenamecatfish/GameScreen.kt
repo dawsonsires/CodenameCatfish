@@ -33,15 +33,16 @@ import java.io.OutputStream
 import kotlin.random.Random
 
 class GameScreen : Fragment() {
+    private lateinit var difficulty: Difficulty
     private var gameStarted = false
     private var currentIndexInSequence = 0
     private lateinit var data: SharedPreferences
     private lateinit var store: SharedPreferences.Editor
     private lateinit var sounds: List<Triple<String, String, Boolean>>
-    val redSound = R.raw.wat
-    val yellowSound =  R.raw.wat1
-    val blueSound = R.raw.wat2
-    val greenSound = R.raw.wat3
+    private val redSound = R.raw.wat
+    private val yellowSound =  R.raw.wat1
+    private val blueSound = R.raw.wat2
+    private val greenSound = R.raw.wat3
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,8 +59,9 @@ class GameScreen : Fragment() {
             R.layout.fragment_game_screen, container, false
         )
         var repeatsLeft = 3
+        difficulty = GameScreenArgs.fromBundle(requireArguments()).difficulty
         val sequence =
-            generateGameSequence(GameScreenArgs.fromBundle(requireArguments()).difficulty)
+            generateGameSequence(difficulty)
         val enteredSequencePoints = mutableListOf<SequencePoint>()
 
         sounds = getSoundsArray()
@@ -194,8 +196,13 @@ class GameScreen : Fragment() {
     }
 
     private fun winTheGame(view: View) {
-
+        val bundle = Bundle()
         Toast.makeText(context, "WINNER!", Toast.LENGTH_LONG).show()
+        when (difficulty) {
+            Difficulty.EASY -> bundle.putSerializable("difficulty", Difficulty.EASY)
+            Difficulty.NORMAL -> bundle.putSerializable("difficulty", Difficulty.NORMAL)
+            else -> bundle.putSerializable("difficulty", Difficulty.HARD)
+        }
         view.findNavController()
             .navigate(GameScreenDirections.actionGameScreenToTitleScreen())
             unlockSounds(currentIndexInSequence/5)

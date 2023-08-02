@@ -12,7 +12,10 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
 import com.example.codenamecatfish.databinding.FragmentTitleScreenBinding
+import java.io.BufferedReader
+import java.io.InputStreamReader
 import java.lang.Error
+import java.nio.file.Files
 
 class TitleScreen : Fragment() {
 
@@ -37,16 +40,18 @@ class TitleScreen : Fragment() {
         }
 
         binding.easterEgg.setOnClickListener {
-
-            Toast.makeText(context, "Hi", Toast.LENGTH_SHORT)
-//            try {
-//                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:///dQw4w9WgXcQ?si=3pdKDjcKseIQrayT")))
-//            } catch (e: Error){
-//                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://youtu.be/dQw4w9WgXcQ?si=3pdKDjcKseIQrayT")))   // if YouTube is not installed
-//            }
+            try {
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:///dQw4w9WgXcQ?si=3pdKDjcKseIQrayT")))
+            } catch (e: Error){
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://youtu.be/dQw4w9WgXcQ?si=3pdKDjcKseIQrayT")))   // if YouTube is not installed
+            }
         }
 
         val growShrinkAnimation = AnimationUtils.loadAnimation(context, R.anim.grow_shrink )
+        val bob = BufferedReader(InputStreamReader(context?.assets?.open("splash.txt")))
+        val bobslist = mutableListOf<String>()
+        bob.forEachLine { bobslist.add(it) }
+        binding.splashText.text = bobslist[(0 until bobslist.size).random()].trim()
         binding.splashText.startAnimation(growShrinkAnimation)
 
         return binding.root
