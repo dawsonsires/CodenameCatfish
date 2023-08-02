@@ -19,5 +19,118 @@ tools:context=".StatsScreen">
             android:textSize="40sp"
             android:layout_marginTop="60dp"/>
 
+        <androidx.cardview.widget.CardView
+            android:id="@+id/playerCard"
+            android:layout_width="400dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/statsTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="10dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:id="@+id/playerStatsTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/player_stats"
+                    android:textSize="30sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+                <GridLayout
+                    android:id="@+id/playerStats"
+                    app:layout_constraintTop_toBottomOf="@id/playerStatsTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:columnCount="2"
+                    android:layout_margin="5dp">
+
+                    <TextView
+                        android:id="@+id/playCountLbl"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/times_played_lbl"
+                        android:layout_gravity="left"/>
+                    <TextView
+                        android:id="@+id/playCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/times_played"
+                        android:layout_gravity="right"/>
+                    <TextView
+                        android:id="@+id/highScoreLbl"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/highest_score_lbl"
+                        android:layout_gravity="left"/>
+                    <TextView
+                        android:id="@+id/highScore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/highest_score"
+                        android:layout_gravity="right"/>
+                    <TextView
+                        android:id="@+id/soundsUnlockedLbl"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/sounds_unlocked_lbl"
+                        android:layout_gravity="left"/>
+                    <TextView
+                        android:id="@+id/soundsUnlocked"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/sounds_unlocked"
+                        android:layout_gravity="right"/>
+                </GridLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/collinCard"
+            android:layout_width="400dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/playerCard"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="10dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/collinStatsTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Collin's stats:"
+                android:layout_gravity="center"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textSize="30sp"/>
+            <com.jsibbold.zoomage.ZoomageView
+                android:id="@+id/chart"
+                android:layout_width="400dp"
+                android:layout_height="250dp"
+                android:src="@drawable/chart"
+                app:zoomage_restrictBounds="false"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:zoomage_maxScale="2.5"
+                android:padding="10dp"
+                app:layout_constraintTop_toBottomOf="@id/collinStatsTitle"
+                android:contentDescription="Stats chart" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -45,4 +45,11 @@
     <string name="zero_repeats_left">Repeat Sequence (0 left)</string>
     <string name="repeat_sequence_3_left">Repeat Sequence (3 left)</string>
     <string name="no_repeats_left">Out of repeats!</string>
+    <string name="player_stats">Player Stats:</string>
+    <string name="times_played_lbl">Times played:</string>
+    <string name="times_played">0</string>
+    <string name="highest_score_lbl">Highest score:</string>
+    <string name="highest_score">0</string>
+    <string name="sounds_unlocked_lbl">Sounds unlocked:</string>
+    <string name="sounds_unlocked">0</string>
 </resources>

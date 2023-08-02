@@ -1,7 +1,9 @@
 package com.example.codenamecatfish
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
-import androidx.activity.ComponentActivity
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,10 +18,11 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.example.codenamecatfish.databinding.ActivityMainBinding
-import com.example.codenamecatfish.databinding.FragmentGameScreenBinding
 import com.example.codenamecatfish.ui.theme.CodenameCatfishTheme
 
 class MainActivity : AppCompatActivity() {
+
+    lateinit var dataStorage: SharedPreferences
 
     private lateinit var drawerLayout: DrawerLayout
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,6 +38,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+        dataStorage = getSharedPreferences("CatfishDB", Context.MODE_PRIVATE)
          val binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
 //        DataBindingUtil.setContentView<FragmentGameScreenBinding>(this, R.layout.fragment_game_screen)  // TODO: GAME TEST - REMOVE THIS!
         val navController = this.findNavController(R.id.navHost)

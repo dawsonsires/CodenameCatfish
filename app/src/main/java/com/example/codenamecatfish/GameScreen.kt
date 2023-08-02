@@ -3,6 +3,8 @@ package com.example.codenamecatfish
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -19,11 +21,17 @@ class GameScreen : Fragment() {
     private var repeatSequenceChances = 3
     private var gameStarted = false
     private var currentIndexInSequence = 0
+    private lateinit var data: SharedPreferences
+    private lateinit var store: SharedPreferences.Editor
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+        data = requireActivity().getPreferences(Context.MODE_PRIVATE)
+        store = data.edit()
+
         //INFLATE that pup
         val binding: FragmentGameScreenBinding = DataBindingUtil.inflate(
             inflater,
@@ -67,6 +75,9 @@ class GameScreen : Fragment() {
                 binding.btnRepeat.text = getString(R.string.repeat_sequence_3_left)
                 showBlinkingAnimation(sequence.subList(0, 1), binding)
                 currentIndexInSequence++
+                store.putInt("timesPlayed", data.getInt("timesPlayed", 0) + 1)
+                store.commit()
+
             } else {
                 repeatsLeft--
                 when (repeatsLeft) {
@@ -107,6 +118,10 @@ class GameScreen : Fragment() {
             if (value != sequence[index]) {
                 Toast.makeText(context, "Wrong color chosen - game over! :(", Toast.LENGTH_LONG)
                     .show()
+
+                Toast.makeText(context, currentIndexInSequence.toString(), Toast.LENGTH_LONG)
+                    .show()
+                store.commit()
                 view.findNavController()
                     .navigate(GameScreenDirections.actionGameScreenToTitleScreen())
             }
@@ -126,6 +141,7 @@ class GameScreen : Fragment() {
         Toast.makeText(context, "WINNER!", Toast.LENGTH_LONG).show()
         view.findNavController()
             .navigate(GameScreenDirections.actionGameScreenToTitleScreen())
+        store.putInt("highScore", currentIndexInSequence)
     }
 
     private fun animate(button: Button, color1: Int, color2: Int): ObjectAnimator{
