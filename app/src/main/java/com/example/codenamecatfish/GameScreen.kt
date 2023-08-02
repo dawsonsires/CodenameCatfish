@@ -135,7 +135,8 @@ class GameScreen : Fragment() {
                     store.commit()
                 }
                 view.findNavController()
-                    .navigate(GameScreenDirections.actionGameScreenToTitleScreen())
+                    .navigate(R.id.action_gameScreen_to_titleScreen)
+                return
             }
 
             //if next guess is the last in master sequence - you win and get a prize :D
@@ -205,7 +206,7 @@ class GameScreen : Fragment() {
             else -> bundle.putSerializable("difficulty", Difficulty.HARD)
         }
         view.findNavController()
-            .navigate(GameScreenDirections.actionGameScreenToTitleScreen())
+            .navigate(R.id.action_gameScreen_to_titleScreen)
             unlockSounds(currentIndexInSequence/5)
         if(data.getInt("highScore", 0) < currentIndexInSequence) {
             store.putInt("highScore", currentIndexInSequence)
@@ -214,12 +215,13 @@ class GameScreen : Fragment() {
     }
 
     private fun animate(button: Button, color1: Int, color2: Int, sound: Int): ObjectAnimator{
-      val animator = ObjectAnimator.ofArgb(
+
+        val animator = ObjectAnimator.ofArgb(
             button,
             "backgroundColor",
             color1,
             color2
-      )
+        )
         val mp = MediaPlayer.create(context, sound)
         animator.duration = 250
         animator.repeatCount = 1
